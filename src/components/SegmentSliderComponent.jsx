@@ -4,12 +4,13 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import InputContainer from "./InputContainer";
 import { useCallback, useState } from "react";
 import AddSchemaContainer from "./AddSchemaContainer";
+import { postSaveSegment } from "../service/service";
 
 const SegmentDrawerContainer = ({ showSlider, toggleSlider }) => {
   const [segmentName, setSegmentName] = useState("");
   const [schemas, setSchemas] = useState([]);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const newSchema = schemas.reduce((acc, val) => {
       acc[val.value] = val.label;
       return acc;
@@ -18,7 +19,8 @@ const SegmentDrawerContainer = ({ showSlider, toggleSlider }) => {
       segment_name: segmentName,
       schema: [newSchema],
     };
-    console.log("payload", payload);
+    await postSaveSegment(payload);
+    toggleSlider();
   }, [segmentName, schemas]);
   return (
     <Drawer anchor="right" open={showSlider} onClose={toggleSlider}>
